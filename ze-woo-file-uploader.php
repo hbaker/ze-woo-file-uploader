@@ -18,5 +18,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 // CHECK IF WOOCOMMERCE IS ACTIVE
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
+    /**
+     * Adds a custom order action in the "Recent Orders" table of the WooCommerce account
+     *   if a download ID is entered as a "ze_woo_download_id" order custom field
+     * Button downloads custom files for the order
+     * Requires Download Monitor
+     *
+     * @param array $actions the actions available for the order
+     * @param \WC_Order $order the order object for this row
+     * @return array the updated order actions
+     */
+    function ze_woo_add_custom_download_action( $actions, $order ) {
+  
+  // add our action if the order has the ze_woo_download_id field set
+  if ( $file_id = (int) get_post_meta( $order->id, 'ze_woo_download_id', true ) ) {
+    $actions['files'] = array(
+      'url' => trailingslashit( get_site_url() ) . trailingslashit( get_option( 'dlm_download_endpoint' ) ) . $file_id,
+      'name'  => __( 'Get Files', 'ze-woo-file-uploader' ),
+    );
+  }
+  
+  return $actions;
+
+}
+
+add_filter( 'woocommerce_my_account_my_orders_actions', 'ze_woo_add_custom_download_action', 10, 2 );
+
 }
 // END CHECK IF WOOCOMMERCE IS ACTIVE
