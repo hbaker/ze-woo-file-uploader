@@ -18,6 +18,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 // CHECK IF WOOCOMMERCE IS ACTIVE
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 
+    wp_enqueue_style( 'style', get_stylesheet_uri() );
+
     /**
      * Adds a custom order action in the "Recent Orders" table of the WooCommerce account
      *   if a download ID is entered as a "ze_woo_download_id" order custom field
@@ -33,13 +35,13 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
       // BEGIN ORDER LIST CUSTOM DOWNLOAD BUTTON DISPLAY
       // BEGIN ORDER LIST CUSTOM DOWNLOAD BUTTON DISPLAY
       function ze_woo_add_custom_download_list_links( $actions, $order ) {
-        // only add our button if the order is paid for
-        // if using WC 2.5+, can simplify this to: if ( ! $order->is_paid() )
-        if ( ! ( $order->has_status( 'processing' ) || $order->has_status( 'completed' ) ) ) {
+
+        // ONLY DISPLAY LINKS WHEN ORDER STATUS IS COMPLETED (PAID)
+        if ( ! $order->is_paid() ) {
           return $actions;
         }
         
-        // add our action if the order has the custom_file field set
+        // DO THINGS WHEN THERE IS A FILE UPLOADED
         if ( $file_id = get_post_meta( $order->id, 'ze_woo_custom_file_upload', true ) ) {
           
           $zfile        = get_field('ze_woo_custom_file_upload', $order->id);
@@ -47,7 +49,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
 
           $actions['files'] = array(
             'url' => $zurl,
-            'name'  => __( 'Download File(s)', 'ze-woo-file-uploader' ),
+            'name'  => __( 'Get Files', 'ze-woo-file-uploader' ),
           );
         }
         
