@@ -119,5 +119,7 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
       // END ORDER DETAIL CUSTOM DOWNLOAD LINK DISPLAY
       // END ORDER DETAIL CUSTOM DOWNLOAD LINK DISPLAY
 
+      include "includes/ze-woo-file-uploader-options.php";
+
 }
 // END CHECK IF WOOCOMMERCE IS ACTIVE
