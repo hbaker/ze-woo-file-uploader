@@ -10,15 +10,20 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Author URI:      https://hoseabaker.com
  * Text Domain:     ze-woo-file-uploader
  * Domain Path:     /languages
- * Version:         0.1.0
+ * Version:         0.2.2
  *
  * @package         Ze_Woo_File_Uploader
  */
 
+  function add_my_stylesheet() 
+  {
+      wp_enqueue_style( 'style', plugins_url( '/public/css/style.css', __FILE__ ));
+  }
+
+  add_action('admin_print_styles', 'add_my_stylesheet');
+
 // CHECK IF WOOCOMMERCE IS ACTIVE
 if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-
-    wp_enqueue_style( 'style', get_stylesheet_uri() );
 
     /**
      * Adds a custom order action in the "Recent Orders" table of the WooCommerce account
@@ -67,9 +72,9 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
         
         // OPTIONAL: ONLY DISPLAY THE DOWNLOAD LINK IF THE ORDER STATUS IS COMPLETE
         // UNCOMMENT THIS CODE TO MIRROR ORDER STATUS
-        // if ( ! $order->is_paid() ) {
-        // return;
-        // }
+        if ( ! $order->is_paid() ) {
+          return $actions;
+        }
 
         if (get_field('ze_woo_custom_file_upload', $order->id)) { // Only show if field is filled
        
