@@ -31,10 +31,10 @@ if ( in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', g
     function ze_woo_add_custom_download_action( $actions, $order ) {
   
   // add our action if the order has the ze_woo_download_id field set
-  if ( $file_id = (int) get_post_meta( $order->id, 'ze_woo_download_id', true ) ) {
+  if ( $file_id = get_post_meta( $order->id, 'ze_woo_custom_file_upload', true ) ) {
     $actions['files'] = array(
-      'url' => trailingslashit( get_site_url() ) . trailingslashit( get_option( 'dlm_download_endpoint' ) ) . $file_id,
-      'name'  => __( 'Get Files', 'ze-woo-file-uploader' ),
+      'url' => trailingslashit( get_site_url() ) . $file_id,
+      'name'  => __( 'Download Ready', 'ze-woo-file-uploader' ),
     );
   }
   
